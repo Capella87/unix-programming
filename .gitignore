@@ -1,4 +1,6 @@
-/out/
+out/
+scratchpad/
+
 *.dll
 *.exe
 *.out
