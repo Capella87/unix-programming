@@ -47,6 +47,38 @@ To redo, type <kbd>Ctrl + R</kbd>.
 
 As mentioned above, A deleted target is stored in the buffer. type ```p``` to restore it at the cursor location.
 
+### Replace
+
+To replace a character to another one, type ```r``` and type a new character.
+
+### Change
+
+Type ```ce``` to change until the end of word.
+
+This command can also apply  ```e```, ```$```, ```w``` likes the delete command above.
+
+### Cursor Location
+
+Type <kbd>Ctrl + G</kbd> to show the current location in the file.
+
+Press ```G``` to move to the end of file.
+
+Press ```gg``` to move to the beginning of file.
+
+Type the number of line and press G to move there.
+
+### Search
+
+Type ```/``` and keyword you want to search, you can find the keyword in the file.
+
+Press ```n``` to find the same keyword again.
+
+Press ```N``` to find the same one in the reversed direction.
+
+Press <kbd>Ctrl + o</kbd> to go back to where you came from.
+
+Press <kbd>Ctrl + i</kbd> to go forward.
+
 ---
 
 Last Modified: Sep 6, 2022
