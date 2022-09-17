@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <share.h>
+#include <sys/stat.h>
 
 void copy_file(int* ofd, int* wfd)
 {
