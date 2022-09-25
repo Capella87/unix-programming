@@ -28,6 +28,7 @@ int main(int argc, char** argv)
     cur = lseek(fd, 0, SEEK_SET);
     int interval = atoi(argv[1]);
 
+    // Note: fseek and lseek continue move location beyond the end of file
     printf("Current offset : ");
     do
     {
