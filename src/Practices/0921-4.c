@@ -27,10 +27,10 @@ int main(int argc, char** argv)
     fseek(fd, 0, SEEK_END);
     off_t end = ftell(fd);
     fseek(fd, 0, SEEK_SET);
-    cur = ftell(fd);
+    cur = ftell(fd); // Use ftell to get current location
     int interval = atoi(argv[1]);
 
-    // fseek returns 0 if it successfully moved location.
+    // fseek returns 0 if it successfully moved location
     printf("Current offset : ");
     do
     {
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
         fseek(fd, interval, SEEK_CUR);
     } while (ftell(fd) <= end);
 
-
+    // Use fflush to print a string immediately
     printf("\nCurrent data : ");
     fflush(stdout);
     fseek(fd, 0, SEEK_SET);
