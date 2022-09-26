@@ -30,32 +30,23 @@ int main(int argc, char** argv)
 
     if ((buf.st_mode & S_IRUSR) != 0)
         perm[1] = 'r';
-    
     if ((buf.st_mode & S_IWUSR) != 0)
         perm[2] = 'w';
-   
-
     if ((buf.st_mode & S_IXUSR) != 0)
         perm[3] = 'x';
-  
-
     if ((buf.st_mode & S_IRGRP) != 0)
         perm[4] = 'r';
- 
     if ((buf.st_mode & S_IWGRP) != 0)
         perm[5] = 'w';
-
     if ((buf.st_mode & S_IXGRP) != 0)
         perm[6] = 'x';
-
     if ((buf.st_mode & S_IROTH) != 0)
         perm[7] = 'r';
-    
     if ((buf.st_mode & S_IWOTH) != 0)
         perm[8] = 'w';
-    
     if ((buf.st_mode & S_IXOTH) != 0)
         perm[9] = 'x';
+        
     printf("%s\n", perm);
 
     printf("UID : %d\n", buf.st_uid);
