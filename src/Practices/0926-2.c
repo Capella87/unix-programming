@@ -4,6 +4,87 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <stdbool.h>
+
+bool is_regular_file(struct stat* info)
+{
+    return (info->st_mode & S_IFMT) == S_IFREG ? true : false;
+}
+
+void print_permissions(struct stat* info)
+{
+    printf("Permission : ");
+
+    for (int i = 0; i <= 6; i += 3)
+    {
+        if (info->st_mode & (S_IREAD >> i))
+            putchar('r');
+        else putchar('-');
+
+        if (info->st_mode & (S_IWRITE >> i))
+            putchar('w');
+        else putchar('-');
+
+        if (info->st_mode & (S_IEXEC >> i))
+            putchar('x');
+        else putchar('-');
+    }
+    putchar('\n');
+}
+
+mode_t get_new_permissions(const char* new_mode, mode_t mode)
+{
+    int set_mode = 0, i = 2;
+
+    switch (new_mode[0])
+    {
+    case 'g':
+        while (new_mode[i] != '\0')
+        {
+            if (new_mode[i] == 'r')
+                set_mode |= S_IRGRP;
+            else if (new_mode[i] == 'w')
+                set_mode |= S_IWGRP;
+            else if (new_mode[i] == 'x')
+                set_mode |= S_IXGRP;
+            i++;
+        }
+        break;
+
+    case 'u':
+        while (new_mode[i] != '\0')
+        {
+            if (new_mode[i] == 'r')
+                set_mode |= S_IXUSR;
+            else if (new_mode[i] == 'w')
+                set_mode |= S_IWUSR;
+            else if (new_mode[i] == 'x')
+                set_mode |= S_IXUSR;
+            i++;
+        }
+        break;
+
+    case 'o':
+        while (new_mode[i] != '\0')
+        {
+            if (new_mode[i] == 'r')
+                set_mode |= S_IXOTH;
+            else if (new_mode[i] == 'w')
+                set_mode |= S_IWOTH;
+            else if (new_mode[i] == 'x')
+                set_mode |= S_IXOTH;
+            i++;
+        }
+        break;
+    }
+
+    if (new_mode[1] == '+')
+        mode |= set_mode;
+    else if (new_mode[1] == '-')
+        mode &= ~(set_mode);
+
+    return mode;
+}
 
 int main(int argc, char** argv)
 {
@@ -12,94 +93,19 @@ int main(int argc, char** argv)
         printf("Not enough arguments\n");
         exit(1);
     }
-
+    
     struct stat info;
-
     stat(argv[2], &info);
-    char perm[11] = "----------";
-    if (!S_ISREG(info.st_mode))
+    if (!is_regular_file(&info))
     {
-        printf("Argument object is not a file\n");
+        printf("%s is NOT a regular file.\n", argv[2]);
         exit(1);
     }
-    
-    if ((info.st_mode & S_IRUSR) != 0)
-        perm[1] = 'r';
-    if ((info.st_mode & S_IWUSR) != 0)
-        perm[2] = 'w';
-    if ((info.st_mode & S_IXUSR) != 0)
-        perm[3] = 'x';
-    if ((info.st_mode & S_IRGRP) != 0)
-        perm[4] = 'r';
-    if ((info.st_mode & S_IWGRP) != 0)
-        perm[5] = 'w';
-    if ((info.st_mode & S_IXGRP) != 0)
-        perm[6] = 'x';
-    if ((info.st_mode & S_IROTH) != 0)
-        perm[7] = 'r';
-    if ((info.st_mode & S_IWOTH) != 0)
-        perm[8] = 'w';
-    if ((info.st_mode & S_IXOTH) != 0)
-        perm[9] = 'x';
-    printf("%s\n", perm);
+    print_permissions(&info);
 
-    int x = 0;
-    switch (argv[1][0])
-    {
-        case 'g':
-            switch (argv[1][2])
-            {
-                case 'x':
-                    x = S_IXGRP;
-                    break;
-                case 'r':
-                    x = S_IRGRP;
-                    break;
-                case 'w':
-                    x = S_IWGRP;
-                    break;
-            }
-            break;
-
-        case 'u':
-            switch (argv[1][2])
-            {
-                case 'x':
-                    x = S_IXUSR;
-                    break;
-                case 'r':
-                    x = S_IRUSR;
-                    break;
-                case 'w':
-                    x = S_IWUSR;
-                    break;
-            }
-            break;
-        case 'o':
-            switch (argv[1][2])
-            {
-                case 'x':
-                    x = S_IXOTH;
-                    break;
-                case 'r':
-                    x = S_IROTH;
-                    break;
-                case 'w':
-                    x = S_IWOTH;
-                    break;
-            }
-            break;
-    }
-    
-    if (argv[1][1] == '+')
-    {
-        info.st_mode |= x;
-    }
-    else
-    {
-        info.st_mode &= ~(x);
-    }
-    chmod(argv[2], info.st_mode);
+    chmod(argv[2], get_new_permissions(argv[1], info.st_mode));
+    stat(argv[2], &info);
+    print_permissions(&info);
 
     return 0;
 }
