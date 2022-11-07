@@ -11,6 +11,8 @@
 void handler(int signo)
 {
     psignal(signo, "Wake up");
+    sleep(1);
+    puts("Exit the handler");
 }
 
 int main(void)
@@ -28,7 +30,7 @@ int main(void)
     while (1)
     {
         alarm(1);
-        sleep(1);
+        pause();
     }
 
     return 0;
