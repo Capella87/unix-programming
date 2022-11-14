@@ -1,5 +1,7 @@
 out/
 scratchpad/
+.vscode
+/bin
 
 *.dll
 *.exe
