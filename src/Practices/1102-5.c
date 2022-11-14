@@ -14,14 +14,14 @@ sigset_t sig;
 void handler(int signo) // SIGINT
 {
     sigprocmask(SIG_BLOCK, &sig, (sigset_t*)0);
-    psignal(signo, "Received signal:");
+    psignal(signo, "Received signal");
     sleep(10);
     sigprocmask(SIG_UNBLOCK, &sig, (sigset_t*)0);
 }
 
 void handler2(int signo) // SIGUSR1
 {
-    psignal(signo, "Received signal:");
+    psignal(signo, "Received signal");
     printf("SIGUSR1\n");
     sleep(5);
 }
