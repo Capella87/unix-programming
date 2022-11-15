@@ -17,6 +17,7 @@ int main(void)
     struct sigaction act;
 
     sigfillset(&act.sa_mask);
+    sigdelset(&act.sa_mask, SIGINT);
     act.sa_flags = 0;
     act.sa_handler = handler;
 
