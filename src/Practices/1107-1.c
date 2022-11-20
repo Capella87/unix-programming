@@ -40,7 +40,7 @@ void parent(int plist[][2])
             }
         }
 
-        // ???
+        // Exit the loop after all child process are terminated
         if (waitpid(-1, (int*)0, WNOHANG) == -1)
             return;
     }
