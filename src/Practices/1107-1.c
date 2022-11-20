@@ -4,6 +4,8 @@
 #include <sys/wait.h>
 #include <sys/signal.h>
 #include <sys/types.h>
+#include <fcntl.h>
+#include <sys/select.h>
 
 #define CHILDREN 2
 
@@ -21,18 +23,17 @@ void parent(int plist[][2])
         FD_SET(plist[i][0], &pmask);
     }
     
-    pid_t this_pid = getpid();
     int n;
-    while (set = pmask, select(plist[1][CHILDREN - 1] + 1, &set, (fd_set*)0, 
+    while (set = pmask, select(plist[CHILDREN - 1][1] + 1, &set, (fd_set*)0, 
     (fd_set*)0, (struct timeval*)0) > 0)
     {
         for (int i = 0; i < CHILDREN; i++)
         {
             if (FD_ISSET(plist[i][0], &set))
             {
-                if (((n = read(plist[i][0], buffer, 256))) > 0)
+                if ((n = read(plist[i][0], buffer, 256)) > 0)
                 {
-                    write(1, "Message from child: ", 21);
+                    write(1, "Message from child: ", 20);
                     write(1, buffer, n);
                     write(1, "\n", 1);
                 }
@@ -78,7 +79,7 @@ int main(void)
         {
             case 0:
                 child(plist[i]);
-                exit(1);
+                exit(0);
             case -1:
                 perror("fork");
                 exit(1);
