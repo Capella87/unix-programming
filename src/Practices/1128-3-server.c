@@ -48,9 +48,9 @@ int main(void)
     sigusrone.sa_flags = 0;
     sigusrone.sa_handler = handler;
 
-    sigaction(SIGUSR1, &sigusrone, (struct sigaction*)0);
-    printf("This server's pid is %d. Run client with this pid as an argument.", getpid());
+    printf("This server's pid is %d. Run client with this pid as an argument.\n", getpid());
 
+    sigaction(SIGUSR1, &sigusrone, (struct sigaction*)0);
     // Waiting for client to retrieve client pid
     sigsuspend(&usr_mask);
 
@@ -84,13 +84,13 @@ int main(void)
     {
         // Input the message which will be sent to the shared memory
         printf("Server > ");
-        fscanf(stdin, "%s", space);
+        fscanf(stdin, "%[^\n]", space);
         getchar();
 
         // Type 'q' to halt the conversation
         if (!strcmp(space, "q"))
         {
-            puts("Exit this conversation");
+            puts("Exit the conversation");
             terminate_conversation(space_shm_id, space, cloud_shm_id, pid_cloud);
             kill(client_pid, SIGUSR2);
             break;

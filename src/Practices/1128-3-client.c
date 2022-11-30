@@ -76,6 +76,8 @@ int main(int argc, char** argv)
 
     sigaction(SIGUSR2, &siga, (struct sigaction*)0);
     sigsuspend(&usr2);
+
+    puts("Connected to the server");
     while (1)
     {
         if (!strcmp(space, "q"))
@@ -88,13 +90,13 @@ int main(int argc, char** argv)
         putchar('\n');
 
         printf("Client > ");
-        fscanf(stdin, "%s", space);
+        fscanf(stdin, "%[^\n]", space);
         getchar();
 
         // Type 'q' to halt the conversation
         if (!strcmp(space, "q"))
         {
-            puts("Exit this conversation");
+            puts("End the conversation");
             terminate_conversation(space, pid_cloud);
             kill(parent_pid, SIGUSR2);
             break;
@@ -104,5 +106,6 @@ int main(int argc, char** argv)
         sigsuspend(&usr2);
     }
 
+    puts("Bye");
     return 0;
 }
