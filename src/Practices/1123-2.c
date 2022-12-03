@@ -11,6 +11,9 @@
 #include <string.h>
 #include <sys/wait.h>
 
+// Warning : This code was not ran appropriately on WSL2 Ubuntu 22.04. (kernel 5.15.x)
+// This code was ran appropriately on CentOS (Kernel 2.6.x)
+
 struct msgbuf
 {
     int mtype;
@@ -35,12 +38,16 @@ int main(void)
         buffer.mtype = 1;
         char input[80];
         
-        printf("Child > ");
-        fgets(input, 80, stdin);
+        while (1)
+        {
+            printf("Child > ");
+            fgets(input, 80, stdin);
+            if (strlen(input) <= 1) break;
 
-        buffer.mtype = 1;
-        strcpy(buffer.mtext, input);
-        msgsnd(queue_id, &buffer, sizeof(buffer), IPC_NOWAIT);
+            buffer.mtype = 1;
+            strcpy(buffer.mtext, input);
+            msgsnd(queue_id, &buffer, sizeof(buffer), IPC_NOWAIT);
+        }
 
         strcpy(buffer.mtext, "bye");
         buffer.mtype = 2;
