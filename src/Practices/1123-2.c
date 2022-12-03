@@ -67,5 +67,6 @@ int main(void)
         wait((void*)0);
     }
 
+    msgctl(queue_id, IPC_RMID, (void*)0);
     return 0;
 }
